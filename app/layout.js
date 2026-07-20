@@ -1,6 +1,7 @@
 import "./globals.css";
 import ChatWidget from "../components/ChatWidget";
 import AdminHotkey from "../components/AdminHotkey";
+import { Analytics } from '@vercel/analytics/next';
 
 export const metadata = {
   title: "Bag'dod tuman ixtisoslashtirilgan maktabi",
@@ -49,6 +50,7 @@ export default function RootLayout({ children }) {
 
         <ChatWidget />
         <AdminHotkey />
+        <Analytics />
       </body>
     </html>
   );
