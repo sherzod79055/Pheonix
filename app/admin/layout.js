@@ -19,7 +19,7 @@ export default async function AdminLayout({ children }) {
 function AuthGate({ user, children }) {
   // /login o'zi bu layout ostida emas (alohida sahifa bo'lgani uchun bu yerga tekshiruv kifoya)
   if (!user) {
-    redirect("/login");
+    redirect("/panel-7f2k9");
   }
   return children;
 }

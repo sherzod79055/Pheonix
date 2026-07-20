@@ -18,7 +18,7 @@ export default function AdminDashboard() {
 
   async function handleLogout() {
     await supabase.auth.signOut();
-    router.push("/login");
+    router.push("/panel-7f2k9");
     router.refresh();
   }
 

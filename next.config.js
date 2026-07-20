@@ -1,4 +1,7 @@
-NEXT_PUBLIC_SUPABASE_URL=https://xxxxx.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJxxxx
-SUPABASE_SERVICE_ROLE_KEY=eyJxxxx
-ANTHROPIC_API_KEY=sk-ant-xxxx
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  images: {
+    remotePatterns: [{ protocol: "https", hostname: "**.supabase.co" }]
+  }
+};
+module.exports = nextConfig;

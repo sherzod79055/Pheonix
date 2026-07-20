@@ -38,11 +38,30 @@ export default function ChatWidget() {
 
   return (
     <div className="fixed bottom-4 right-4 z-50">
+      <style>{`
+        @keyframes goldPulse {
+          0%, 100% { box-shadow: 0 0 0 0 rgba(212,175,55,0.45), 0 10px 30px -8px rgba(0,0,0,0.5); }
+          50% { box-shadow: 0 0 0 10px rgba(212,175,55,0), 0 10px 30px -8px rgba(0,0,0,0.5); }
+        }
+        .gold-pulse { animation: goldPulse 2.6s ease-out infinite; }
+      `}</style>
+
       {open && (
-        <div className="w-80 h-96 bg-white rounded-lg shadow-xl border flex flex-col mb-3 overflow-hidden">
-          <div className="bg-primary text-white px-4 py-2 flex justify-between items-center">
-            <span className="font-medium text-sm">Maktab AI yordamchisi</span>
-            <button onClick={() => setOpen(false)} aria-label="Yopish">
+        <div
+          className="w-80 h-96 rounded-2xl flex flex-col mb-3 overflow-hidden floating-card"
+          style={{
+            background: "linear-gradient(180deg, rgba(10,25,47,0.92), rgba(15,35,64,0.92))",
+            backdropFilter: "blur(25px) saturate(190%)",
+            WebkitBackdropFilter: "blur(25px) saturate(190%)",
+            border: "1px solid rgba(255,255,255,0.15)"
+          }}
+        >
+          <div className="px-4 py-3 flex justify-between items-center border-b border-white/10">
+            <div className="flex items-center gap-2">
+              <img src="/logo-gold-navy.png" alt="" className="h-6 w-6" />
+              <span className="font-heading font-medium text-sm text-secondary">Maktab AI yordamchisi</span>
+            </div>
+            <button onClick={() => setOpen(false)} aria-label="Yopish" className="text-white/60 hover:text-white">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M18 6L6 18M6 6l12 12" />
               </svg>
@@ -52,33 +71,43 @@ export default function ChatWidget() {
             {messages.map((m, i) => (
               <div
                 key={i}
-                className={`rounded-lg px-3 py-2 max-w-[85%] ${
-                  m.role === "user" ? "bg-primary text-white ml-auto" : "bg-gray-100 text-gray-800"
+                className={`rounded-xl px-3 py-2 max-w-[85%] font-body ${
+                  m.role === "user"
+                    ? "bg-secondary text-primary ml-auto"
+                    : "bg-white/10 text-white/90 border border-white/10"
                 }`}
               >
                 {m.content}
               </div>
             ))}
-            {loading && <div className="text-gray-400 text-xs">Yozmoqda...</div>}
+            {loading && <div className="text-white/40 text-xs">Yozmoqda...</div>}
             <div ref={bottomRef} />
           </div>
-          <div className="border-t p-2 flex gap-2">
+          <div className="border-t border-white/10 p-2 flex gap-2">
             <input
-              className="flex-1 border rounded px-2 py-1 text-sm outline-none"
+              className="flex-1 bg-white/5 border border-white/10 rounded-lg px-2 py-1 text-sm outline-none text-white placeholder-white/40"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && sendMessage()}
               placeholder="Savolingizni yozing..."
             />
-            <button onClick={sendMessage} className="bg-secondary text-primary font-medium px-3 rounded text-sm">
+            <button
+              onClick={sendMessage}
+              className="bg-secondary text-primary font-medium px-3 rounded-lg text-sm hover:brightness-110"
+            >
               Yuborish
             </button>
           </div>
         </div>
       )}
+
       <button
         onClick={() => setOpen(!open)}
-        className="bg-secondary text-primary rounded-full w-14 h-14 shadow-lg flex items-center justify-center"
+        className="gold-pulse rounded-full w-14 h-14 flex items-center justify-center"
+        style={{
+          background: "linear-gradient(135deg, #D4AF37, #AA7C11)",
+          color: "#0A192F"
+        }}
         aria-label="Chatni ochish"
       >
         <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
