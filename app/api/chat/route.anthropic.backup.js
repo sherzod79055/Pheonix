@@ -1,10 +1,7 @@
-// AI agent — Google Gemini orqali ishlaydi.
-// Zaxira (eski Anthropic versiyasi) shu papkada route.anthropic.backup.js nomi bilan saqlangan.
-
-import { GoogleGenAI } from "@google/genai";
+import Anthropic from "@anthropic-ai/sdk";
 import { createServiceClient } from "../../../lib/supabase/server";
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 async function buildContext() {
   const supabase = createServiceClient();
@@ -47,23 +44,18 @@ export async function POST(req) {
     const { messages } = await req.json();
     const context = await buildContext();
 
-    const systemInstruction = `Siz Bag'dod tuman ixtisoslashtirilgan maktabining rasmiy AI yordamchisisiz. Faqat quyida berilgan real maktab ma'lumotlariga asoslanib, o'zbek tilida, qisqa va aniq javob bering. Agar javob quyidagi ma'lumotlarda bo'lmasa, buni ochiq ayting va maktab kotibiyatiga murojaat qilishni tavsiya qiling. Hech qachon mavjud bo'lmagan faktlarni o'ylab topmang.
+    const system = `Siz Bag'dod tuman ixtisoslashtirilgan maktabining rasmiy AI yordamchisisiz. Faqat quyida berilgan real maktab ma'lumotlariga asoslanib, o'zbek tilida, qisqa va aniq javob bering. Agar javob quyidagi ma'lumotlarda bo'lmasa, buni ochiq ayting va maktab kotibiyatiga murojaat qilishni tavsiya qiling. Hech qachon mavjud bo'lmagan faktlarni o'ylab topmang.
 
 ${context}`;
 
-    // Gemini formatiga moslashtirish: role "assistant" -> "model"
-    const contents = messages.map((m) => ({
-      role: m.role === "assistant" ? "model" : "user",
-      parts: [{ text: m.content }]
-    }));
-
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents,
-      config: { systemInstruction }
+    const response = await anthropic.messages.create({
+      model: "claude-sonnet-4-6",
+      max_tokens: 500,
+      system,
+      messages: messages.map((m) => ({ role: m.role, content: m.content }))
     });
 
-    const reply = response.text || "";
+    const reply = response.content.find((c) => c.type === "text")?.text || "";
     return Response.json({ reply });
   } catch (err) {
     console.error(err);
